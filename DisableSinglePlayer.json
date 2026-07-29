@@ -2,7 +2,7 @@
   "id": "DisableSinglePlayer",
   "name": "DisableSinglePlayer",
   "author": "callistachang",
-  "description": "Removes solo play. The Singleplayer menu entry is hidden and every solo run-start path is refused, so the Spire can only be attempted in multiplayer.",
+  "description": "Removes singleplayer mode from Slay the Spire 2.",
   "version": "1.0.0",
   "has_pck": false,
   "has_dll": true,
