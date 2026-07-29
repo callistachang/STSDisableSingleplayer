@@ -2,6 +2,8 @@
 
 *Removes solo play from Slay the Spire 2.*
 
+[![Latest release](https://img.shields.io/github/v/release/callistachang/STSDisableSingleplayer)](https://github.com/callistachang/STSDisableSingleplayer/releases/latest)
+
 A mod for [**Slay the Spire 2**](https://store.steampowered.com/app/2868840/Slay_the_Spire_2/)
 that takes singleplayer off the table: the Singleplayer main menu entry is hidden, and
 every code path that starts or resumes a solo run is refused. 
