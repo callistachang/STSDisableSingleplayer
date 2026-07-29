@@ -2,7 +2,7 @@
   "id": "DisableSinglePlayer",
   "name": "DisableSinglePlayer",
   "author": "callistachang",
-  "description": "Removes singleplayer mode from Slay the Spire 2.",
+  "description": "Removes single player mode from Slay the Spire 2.",
   "version": "1.0.0",
   "has_pck": false,
   "has_dll": true,

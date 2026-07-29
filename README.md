@@ -1,6 +1,6 @@
 # Slay the Spire 2 - DisableSinglePlayer Mod
 
-*Removes singleplayer mode from [Slay the Spire 2](https://store.steampowered.com/app/2868840/Slay_the_Spire_2/).*
+*Removes single player mode from [Slay the Spire 2](https://store.steampowered.com/app/2868840/Slay_the_Spire_2/).*
 
 Tested against STS2 `v0.109.1`.
 
