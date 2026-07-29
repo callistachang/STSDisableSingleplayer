@@ -86,5 +86,5 @@ internal static class SoloRunBlocker
     }
 
     private static void Refused(MethodBase origin) =>
-        PatchUtil.Log($"refused solo run via {origin.DeclaringType?.Name}.{origin.Name} -- co-op only.");
+        PatchUtil.Log($"refused solo run via {origin.DeclaringType?.Name}.{origin.Name} -- multiplayer only.");
 }

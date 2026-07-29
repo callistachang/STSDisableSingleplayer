@@ -1,8 +1,8 @@
 {
   "id": "DisableSinglePlayer",
-  "name": "Co-op Only",
-  "author": "callista",
-  "description": "Removes solo play. The Singleplayer menu entry is hidden and every solo run-start path is refused, so the Spire can only be attempted with a partner.",
+  "name": "DisableSinglePlayer",
+  "author": "callistachang",
+  "description": "Removes solo play. The Singleplayer menu entry is hidden and every solo run-start path is refused, so the Spire can only be attempted in multiplayer.",
   "version": "1.0.0",
   "has_pck": false,
   "has_dll": true,

@@ -1,4 +1,4 @@
-# DisableSinglePlayer — "Co-op Only"
+# DisableSinglePlayer
 
 *Removes solo play from Slay the Spire 2.*
 
@@ -12,8 +12,12 @@ Windows, Linux, and macOS. Tested against STS2 `v0.109.1`.
 
 ### 1. Install the Mod
 
-Put `DisableSinglePlayer.dll` and `DisableSinglePlayer.json` in a `DisableSinglePlayer`
-folder inside the game's mods directory:
+Download the latest `DisableSinglePlayer-v*.zip` from
+[**Releases**](https://github.com/callistachang/STSDisableSingleplayer/releases/latest)
+and unzip it into the game's mods directory. The archive already contains the correctly
+named `DisableSinglePlayer` folder, so it lands in the right place.
+
+One build covers every platform — only the mods directory differs:
 
 | Platform | Mods directory |
 |---|---|
@@ -24,7 +28,8 @@ folder inside the game's mods directory:
 `<install>` is your Steam install root - the folder containing `SlayTheSpire2.exe`, or
 `SlayTheSpire2.app` on macOS. Create `mods` if it isn't there.
 
-e.g. From a terminal on macOS:
+Placing the two files by hand works just as well — that's all the zip contains. e.g. from
+a terminal on macOS:
 
 ```sh
 MODS="$GAME/SlayTheSpire2.app/Contents/MacOS/mods/DisableSinglePlayer"
@@ -102,3 +107,23 @@ for each platform, which is what makes opening the project in an IDE work:
 ```sh
 dotnet build -c Release -p:STS2GameDir="<install root>"
 ```
+
+### Cutting a Release
+
+```sh
+./release.sh 1.1.0      # bump the manifest, build, package, tag, publish
+./release.sh            # release the version already in the manifest
+./release.sh --dry-run  # build dist/DisableSinglePlayer-v*.zip and stop
+```
+
+`DisableSinglePlayer.json` holds the version — the `.csproj` has none — and the tag is
+that version prefixed with `v`. The zip nests the DLL and the manifest under a
+`DisableSinglePlayer/` folder so players can unzip straight into `mods/`. One archive
+covers all three platforms, since the output is platform-agnostic IL.
+
+Releases are cut locally, not in CI. The `.csproj` references `sts2.dll` and
+`GodotSharp.dll` from a Steam install, so only a machine that owns the game can build the
+mod, and vendoring those assemblies to satisfy a runner would mean redistributing them.
+
+Note the release notes quote the "Tested against STS2" version from the top of this file —
+re-verify against the current game build and update that line before releasing.
