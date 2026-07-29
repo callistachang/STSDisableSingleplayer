@@ -1,0 +1,65 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <OutputType>Library</OutputType>
+    <Nullable>enable</Nullable>
+    <LangVersion>12.0</LangVersion>
+    <AssemblyName>DisableSinglePlayer</AssemblyName>
+    <RootNamespace>DisableSinglePlayer</RootNamespace>
+    <EnableDynamicLoading>true</EnableDynamicLoading>
+    <!-- Silence "no matching parameter" style noise from reflective Harmony use. -->
+    <NoWarn>$(NoWarn);CS0649</NoWarn>
+  </PropertyGroup>
+
+  <!--
+    Where the game's assemblies live. build.sh / build.ps1 resolve this and pass it in;
+    these defaults are the fallback for a bare `dotnet build` or an IDE.
+
+    Override either level:
+      dotnet build -p:STS2GameDir="D:\SteamLibrary\steamapps\common\Slay the Spire 2"
+      dotnet build -p:STS2DataDir=/some/exact/data_sts2_folder
+  -->
+  <PropertyGroup>
+    <!-- Default Steam install root, per platform. MSBuild accepts forward slashes everywhere. -->
+    <STS2GameDir Condition="'$(STS2GameDir)' == '' and '$(OS)' == 'Windows_NT'">$(MSBuildProgramFiles32)/Steam/steamapps/common/Slay the Spire 2</STS2GameDir>
+    <STS2GameDir Condition="'$(STS2GameDir)' == '' and $([MSBuild]::IsOSPlatform('OSX'))">$(HOME)/Library/Application Support/Steam/steamapps/common/Slay the Spire 2</STS2GameDir>
+    <STS2GameDir Condition="'$(STS2GameDir)' == ''">$(HOME)/.steam/steam/steamapps/common/Slay the Spire 2</STS2GameDir>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(STS2DataDir)' == ''">
+    <!--
+      First layout whose sts2.dll actually exists wins, so this needs no platform test.
+      Windows and Linux keep the payload beside the executable at the install root;
+      macOS buries it in the .app bundle. macOS ships both architectures, and sts2.dll
+      is managed IL that's identical in each, so either compiles the same.
+    -->
+    <_STS2Bundle>$(STS2GameDir)/SlayTheSpire2.app/Contents/Resources</_STS2Bundle>
+    <STS2DataDir Condition="Exists('$(STS2GameDir)/data_sts2_windows_x86_64/sts2.dll')">$(STS2GameDir)/data_sts2_windows_x86_64</STS2DataDir>
+    <STS2DataDir Condition="'$(STS2DataDir)' == '' and Exists('$(STS2GameDir)/data_sts2_linuxbsd_x86_64/sts2.dll')">$(STS2GameDir)/data_sts2_linuxbsd_x86_64</STS2DataDir>
+    <STS2DataDir Condition="'$(STS2DataDir)' == '' and Exists('$(_STS2Bundle)/data_sts2_macos_arm64/sts2.dll')">$(_STS2Bundle)/data_sts2_macos_arm64</STS2DataDir>
+    <STS2DataDir Condition="'$(STS2DataDir)' == '' and Exists('$(_STS2Bundle)/data_sts2_macos_x86_64/sts2.dll')">$(_STS2Bundle)/data_sts2_macos_x86_64</STS2DataDir>
+  </PropertyGroup>
+
+  <!-- Private=false: reference the game's assemblies in place, never copy them into the mod output. -->
+  <ItemGroup>
+    <Reference Include="sts2">
+      <HintPath>$(STS2DataDir)/sts2.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="GodotSharp">
+      <HintPath>$(STS2DataDir)/GodotSharp.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="0Harmony">
+      <HintPath>$(STS2DataDir)/0Harmony.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <Target Name="CheckGameRefs" BeforeTargets="BeforeBuild">
+    <Error Condition="!Exists('$(STS2DataDir)/sts2.dll')"
+           Text="sts2.dll not found. Looked under STS2GameDir='$(STS2GameDir)' (resolved STS2DataDir='$(STS2DataDir)'). Run ./build.sh or .\build.ps1, which locate the Steam install for you, or pass -p:STS2GameDir=&lt;install root&gt;." />
+  </Target>
+
+</Project>
